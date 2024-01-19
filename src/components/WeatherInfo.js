@@ -52,7 +52,7 @@ const WeatherInfo = ({ data, daily, displayUnit, setDisplayUnit, city, getWeathe
             {daily && (
                 <div>
                     <h3>Upcoming Days Forecast:</h3>
-                    <Slider dots={true} infinite={true} speed={500} slidesToShow={2} slidesToScroll={1}>
+                    <Slider dots={true} infinite={false} speed={500} slidesToShow={2} slidesToScroll={1}>
                         {daily.map((day, index) => (
                             <div key={index}>
                                 <p>{new Date(day.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}</p>
