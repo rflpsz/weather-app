@@ -57,6 +57,10 @@ Once you've completed the installation and configuration, you can run the Weathe
 - Type the name of a city in the search bar and click on it.
 - Click the "Get Weather" button to fetch and display the current weather.
 
+### Demo
+
+- I deployed the project on Netlify, so you can see a working demo at any time by accessing the link: [OPEN DEMO](https://weather-and-alerts.netlify.app)
+
 ### Additional Features
 
 - The application provides a toggle button to switch between Celsius and Fahrenheit units.
@@ -72,15 +76,15 @@ Once you've completed the installation and configuration, you can run the Weathe
 
 - **Responsive Design**: The application is designed to be responsive, ensuring a seamless experience across various devices and screen sizes.
 
-- **Unit Toggle and Temperature Display**: The user can toggle between Celsius and Fahrenheit units. Temperature is displayed in whole numbers, rounded up to ensure clarity and simplicity.
+- **BONUS**: **Unit Toggle and Temperature Display**: The user can toggle between Celsius and Fahrenheit units. Temperature is displayed in whole numbers, rounded up to ensure clarity and simplicity.
 
-- **Alert Modals**: In case of severe weather alerts for the selected location, a modal is automatically displayed, providing users with important information from authoritative weather sources.
+- **BONUS**: **Alert Modals**: In case of severe weather alerts for the selected location, a modal is automatically displayed, providing users with important information from authoritative weather sources.
+
+- **BONUS**: **Extended Weather Forecast**: weather forecast for the next 8 days in a carousel with stylized icons
 
 ### Future Enhancements
 
 - **User Authentication**: Implement user authentication to allow users to save and view their favorite locations.
-
-- **Extended Forecast**: Include an extended weather forecast for the upcoming days to provide users with a more comprehensive outlook.
 
 - **Localization**: Add support for multiple languages to cater to a global audience.
 
