@@ -43,6 +43,11 @@ const WeatherInfo = styled.div`
   margin-top: 15px;
 `;
 
+const ErrorMessage = styled.div`
+  color: #ff0000;
+  margin-top: 10px;
+`;
+
 const WeatherDisplay = () => {
     const [city, setCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
@@ -55,10 +60,15 @@ const WeatherDisplay = () => {
             setLoading(true);
 
             const data = await api.fetchWeather(city);
+
+            if (data.cod && data.cod !== '200') {
+                throw new Error(data.message);
+            }
+
             setWeatherData(data);
         } catch (error) {
             console.error(error.message);
-            setError('Could not fetch weather data. Please try again.');
+            setError('Could not fetch weather data. Please enter a valid city name.');
         } finally {
             setLoading(false);
         }
