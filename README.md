@@ -62,6 +62,32 @@ Once you've completed the installation and configuration, you can run the Weathe
 - The application provides a toggle button to switch between Celsius and Fahrenheit units.
 - If there are weather alerts issued by authorities, a modal will appear on the screen informing you of the details automatically.
 
+## Additional Notes
+
+### Implementation Choices
+
+- **React and Styled Components**: The Weather App is built using React.js for its component-based architecture, making it modular and easy to maintain. Styled Components are used for styling, providing a clean and component-centric approach to styling.
+
+- **Google Maps API and OpenWeatherMap API**: The application utilizes the Google Maps API for location autocomplete and map display. Weather data is fetched from the OpenWeatherMap API, allowing us to retrieve accurate and up-to-date weather information.
+
+- **Responsive Design**: The application is designed to be responsive, ensuring a seamless experience across various devices and screen sizes.
+
+- **Unit Toggle and Temperature Display**: The user can toggle between Celsius and Fahrenheit units. Temperature is displayed in whole numbers, rounded up to ensure clarity and simplicity.
+
+- **Alert Modals**: In case of severe weather alerts for the selected location, a modal is automatically displayed, providing users with important information from authoritative weather sources.
+
+### Future Enhancements
+
+- **User Authentication**: Implement user authentication to allow users to save and view their favorite locations.
+
+- **Extended Forecast**: Include an extended weather forecast for the upcoming days to provide users with a more comprehensive outlook.
+
+- **Localization**: Add support for multiple languages to cater to a global audience.
+
+### Feedback and Contributions
+
+Feel free to provide feedback or contribute to the project. If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
+
 ### License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
