@@ -66,7 +66,7 @@ const ErrorMessage = styled.div`
 const WeatherDisplay = () => {
 
     const [displayUnit, setDisplayUnit] = useState('C');
-    const [unit, setUnit] = useState('metric');
+    const [unit] = useState('metric');
     const [city, setCity] = useState('');
     const [weatherCity, setWeatherCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
