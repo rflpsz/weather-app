@@ -58,13 +58,14 @@ const WeatherDisplay = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [unit, setUnit] = useState('metric');
 
     const getWeather = async () => {
         try {
             setError(null);
             setLoading(true);
 
-            const data = await api.fetchWeather(city);
+            const data = await api.fetchWeather(city, unit);
 
             if (data.cod && data.cod !== '200') {
                 throw new Error(data.message);
@@ -79,6 +80,10 @@ const WeatherDisplay = () => {
         }
     };
 
+    const toggleUnit = () => {
+        setUnit(unit === 'metric' ? 'imperial' : 'metric');
+    };
+
     return (
         <Container>
             <Input
@@ -91,6 +96,10 @@ const WeatherDisplay = () => {
                 {loading ? 'Loading...' : 'Get Weather'}
             </Button>
 
+            <ToggleUnitButton onClick={toggleUnit}>
+                {unit === 'metric' ? 'Switch to Fahrenheit' : 'Switch to Celsius'}
+            </ToggleUnitButton>
+
             {loading && <LoadingMessage>Loading weather data...</LoadingMessage>}
             {error && <ErrorMessage>{error}</ErrorMessage>}
 
@@ -98,7 +107,7 @@ const WeatherDisplay = () => {
                 <WeatherInfoContainer>
                     <WeatherInfo>
                         <h2>{weatherData.name}, {weatherData.sys.country}</h2>
-                        <p>Temperature: {weatherData.main.temp} °C</p>
+                        <p>Temperature: {weatherData.main.temp} {unit === 'metric' ? '°C' : '°F'}</p>
                         <p>Weather: {weatherData.weather[0].description}</p>
                         <p>Humidity: {weatherData.main.humidity}%</p>
                         <p>Wind Speed: {weatherData.wind.speed} m/s</p>
@@ -109,4 +118,4 @@ const WeatherDisplay = () => {
     );
 };
 
-export default WeatherDisplay;  
+export default WeatherDisplay;
