@@ -46,13 +46,21 @@ const WeatherInfo = styled.div`
 const WeatherDisplay = () => {
     const [city, setCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const getWeather = async () => {
         try {
+            setError(null);
+            setLoading(true);
+
             const data = await api.fetchWeather(city);
             setWeatherData(data);
         } catch (error) {
             console.error(error.message);
+            setError('Could not fetch weather data. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -64,7 +72,11 @@ const WeatherDisplay = () => {
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="Enter city name"
             />
-            <Button onClick={getWeather}>Get Weather</Button>
+            <Button onClick={getWeather} disabled={loading}>
+                {loading ? 'Loading...' : 'Get Weather'}
+            </Button>
+
+            {error && <ErrorMessage>{error}</ErrorMessage>}
 
             {weatherData && (
                 <WeatherInfoContainer>
