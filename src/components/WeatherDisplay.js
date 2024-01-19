@@ -6,12 +6,19 @@ const Container = styled.div`
   max-width: 400px;
   margin: 0 auto;
   text-align: center;
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const Input = styled.input`
   padding: 0.5rem;
-  margin-right: 0.5rem;
-  width: 200px;
+  width: 70%;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
@@ -20,10 +27,20 @@ const Button = styled.button`
   color: white;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
 `;
 
 const WeatherInfoContainer = styled.div`
   margin-top: 20px;
+`;
+
+const WeatherInfo = styled.div`
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
 `;
 
 const WeatherDisplay = () => {
@@ -41,16 +58,23 @@ const WeatherDisplay = () => {
 
     return (
         <Container>
-            <Input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+            <Input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Enter city name"
+            />
             <Button onClick={getWeather}>Get Weather</Button>
 
             {weatherData && (
                 <WeatherInfoContainer>
-                    <h2>{weatherData.name}, {weatherData.sys.country}</h2>
-                    <p>Temperature: {weatherData.main.temp} °C</p>
-                    <p>Weather: {weatherData.weather[0].description}</p>
-                    <p>Humidity: {weatherData.main.humidity}%</p>
-                    <p>Wind Speed: {weatherData.wind.speed} m/s</p>
+                    <WeatherInfo>
+                        <h2>{weatherData.name}, {weatherData.sys.country}</h2>
+                        <p>Temperature: {weatherData.main.temp} °C</p>
+                        <p>Weather: {weatherData.weather[0].description}</p>
+                        <p>Humidity: {weatherData.main.humidity}%</p>
+                        <p>Wind Speed: {weatherData.wind.speed} m/s</p>
+                    </WeatherInfo>
                 </WeatherInfoContainer>
             )}
         </Container>
@@ -58,4 +82,3 @@ const WeatherDisplay = () => {
 };
 
 export default WeatherDisplay;
-
