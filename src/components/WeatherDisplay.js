@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import api from '../utils/api';
+import { GoogleMap, useLoadScript, StandaloneSearchBox } from '@react-google-maps/api';
+import { fetchWeatherByCoordinates } from '../utils/api';
+import { Marker } from '@react-google-maps/api';
+import WeatherInfo from './WeatherInfo';
+import { TailSpin } from 'react-loader-spinner';
+
 
 const Container = styled.div`
   max-width: 400px;
@@ -31,17 +36,22 @@ const Button = styled.button`
   border-radius: 4px;
 `;
 
+const containerStyle = {
+    width: '100%',
+    height: '200px',
+    marginBottom: '10px'
+};
+
+const center = {
+    lat: 0,
+    lng: 0,
+};
+
 const WeatherInfoContainer = styled.div`
   margin-top: 20px;
 `;
 
-const WeatherInfo = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  margin-top: 15px;
-`;
+const googleMapsApiKey = 'AIzaSyAiN6j_W886eIgBznxxf3HBbuo9uy8u2_c';
 
 const LoadingMessage = styled.div`
   color: #555;
@@ -54,66 +64,121 @@ const ErrorMessage = styled.div`
 `;
 
 const WeatherDisplay = () => {
+
+    const [displayUnit, setDisplayUnit] = useState('C');
+    const [unit, setUnit] = useState('metric');
     const [city, setCity] = useState('');
+    const [weatherCity, setWeatherCity] = useState('');
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [unit, setUnit] = useState('metric');
+    const [coordinates, setCoordinates] = useState(null);
+    const autocomplete = useRef(null);
 
-    const getWeather = async () => {
+    const getWeather = useCallback(async () => {
         try {
             setError(null);
             setLoading(true);
 
-            const data = await api.fetchWeather(city, unit);
+            if (!coordinates) {
+                throw new Error('Invalid coordinates.');
+            }
+
+            console.log('Coordinates:', coordinates);
+            console.log('Unit:', unit);
+
+            const { lat, lng } = coordinates;
+
+            const data = await fetchWeatherByCoordinates(lat, lng, unit);
 
             if (data.cod && data.cod !== '200') {
                 throw new Error(data.message);
             }
 
             setWeatherData(data);
+
         } catch (error) {
             console.error(error.message);
             setError('Could not fetch weather data. Please enter a valid city name.');
         } finally {
             setLoading(false);
         }
+    }, [coordinates, unit]);
+
+    const handlePlaceSelect = (place) => {
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+
+        setCoordinates({ lat, lng });
+        setWeatherCity(place.name);
     };
 
-    const toggleUnit = () => {
-        setUnit(unit === 'metric' ? 'imperial' : 'metric');
-    };
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey,
+        libraries: ['places']
+    });
+
+    if (loadError) return 'Error loading maps';
+    if (!isLoaded) return 'Loading maps';
 
     return (
         <Container>
-            <Input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Enter city name"
-            />
-            <Button onClick={getWeather} disabled={loading}>
-                {loading ? 'Loading...' : 'Get Weather'}
-            </Button>
 
-            <ToggleUnitButton onClick={toggleUnit}>
-                {unit === 'metric' ? 'Switch to Fahrenheit' : 'Switch to Celsius'}
-            </ToggleUnitButton>
+            <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={coordinates || center}
+                zoom={coordinates ? 10 : 2}
+            >
+                {coordinates && (
+                    <Marker
+                        position={coordinates}
+                        title="Selected City"
+                    />
+                )}
+            </GoogleMap>
+
+            <StandaloneSearchBox
+                onLoad={(ref) => (autocomplete.current = ref)}
+                onPlacesChanged={() => {
+                    const places = autocomplete.current.getPlaces();
+                    handlePlaceSelect(places[0]);
+                }}
+            >
+                <Input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Enter city name"
+                />
+            </StandaloneSearchBox>
+
+            <Button
+                onClick={getWeather}
+                disabled={loading || !city}
+                style={{ backgroundColor: loading || !city ? '#ccc' : '#61dafb' }}
+            >
+                {loading ? (
+                    <TailSpin color="#fff" height={20} width={20} />
+                ) : (
+                    'Get Weather'
+                )}
+            </Button>
 
             {loading && <LoadingMessage>Loading weather data...</LoadingMessage>}
             {error && <ErrorMessage>{error}</ErrorMessage>}
 
             {weatherData && (
                 <WeatherInfoContainer>
-                    <WeatherInfo>
-                        <h2>{weatherData.name}, {weatherData.sys.country}</h2>
-                        <p>Temperature: {weatherData.main.temp} {unit === 'metric' ? '°C' : '°F'}</p>
-                        <p>Weather: {weatherData.weather[0].description}</p>
-                        <p>Humidity: {weatherData.main.humidity}%</p>
-                        <p>Wind Speed: {weatherData.wind.speed} m/s</p>
-                    </WeatherInfo>
+                    <WeatherInfo
+                        data={weatherData.current}
+                        displayUnit={displayUnit}
+                        setDisplayUnit={setDisplayUnit}
+                        city={weatherCity}
+                        getWeather={getWeather}
+                    />
                 </WeatherInfoContainer>
             )}
+
         </Container>
     );
 };
