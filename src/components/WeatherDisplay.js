@@ -43,6 +43,11 @@ const WeatherInfo = styled.div`
   margin-top: 15px;
 `;
 
+const LoadingMessage = styled.div`
+  color: #555;
+  margin-top: 10px;
+`;
+
 const ErrorMessage = styled.div`
   color: #ff0000;
   margin-top: 10px;
@@ -86,6 +91,7 @@ const WeatherDisplay = () => {
                 {loading ? 'Loading...' : 'Get Weather'}
             </Button>
 
+            {loading && <LoadingMessage>Loading weather data...</LoadingMessage>}
             {error && <ErrorMessage>{error}</ErrorMessage>}
 
             {weatherData && (
@@ -103,4 +109,4 @@ const WeatherDisplay = () => {
     );
 };
 
-export default WeatherDisplay;
+export default WeatherDisplay;  
