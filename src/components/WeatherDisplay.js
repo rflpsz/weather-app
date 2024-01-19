@@ -5,6 +5,7 @@ import { fetchWeatherByCoordinates } from '../utils/api';
 import { Marker } from '@react-google-maps/api';
 import WeatherInfo from './WeatherInfo';
 import { TailSpin } from 'react-loader-spinner';
+import AlertModal from './AlertModal';
 
 
 const Container = styled.div`
@@ -51,7 +52,7 @@ const WeatherInfoContainer = styled.div`
   margin-top: 20px;
 `;
 
-const googleMapsApiKey = 'AIzaSyAiN6j_W886eIgBznxxf3HBbuo9uy8u2_c';
+const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const LoadingMessage = styled.div`
   color: #555;
@@ -63,7 +64,11 @@ const ErrorMessage = styled.div`
   margin-top: 10px;
 `;
 
+const libraries = ['places'];
+
 const WeatherDisplay = () => {
+
+    const [showAlertModal, setShowAlertModal] = useState(false);
 
     const [displayUnit, setDisplayUnit] = useState('C');
     const [unit] = useState('metric');
@@ -95,6 +100,10 @@ const WeatherDisplay = () => {
                 throw new Error(data.message);
             }
 
+            if (data.alerts && data.alerts.length > 0) {
+                setShowAlertModal(true);
+            }
+
             setWeatherData(data);
 
         } catch (error) {
@@ -115,7 +124,7 @@ const WeatherDisplay = () => {
 
     const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey,
-        libraries: ['places']
+        libraries,
     });
 
     if (loadError) return 'Error loading maps';
@@ -178,8 +187,18 @@ const WeatherDisplay = () => {
                     />
                 </WeatherInfoContainer>
             )}
+            
+            {showAlertModal && weatherData && weatherData.alerts && (
+                <AlertModal
+                    isOpen={showAlertModal}
+                    onClose={() => setShowAlertModal(false)}
+                    alerts={weatherData.alerts}
+                />
+            )}
 
         </Container>
+
+
     );
 };
 
