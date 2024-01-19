@@ -1,7 +1,7 @@
 const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
 
 export const fetchWeatherByCoordinates = async (lat, lon, unit) => {
-  const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${unit}&exclude=minutely,hourly,daily&appid=${apiKey}`;
+  const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${unit}&exclude=minutely,hourly&appid=${apiKey}`;
 
   try {
     const response = await fetch(apiUrl);

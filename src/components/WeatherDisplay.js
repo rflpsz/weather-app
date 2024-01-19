@@ -120,6 +120,7 @@ const WeatherDisplay = () => {
 
         setCoordinates({ lat, lng });
         setWeatherCity(place.name);
+        setCity(place.name)
     };
 
     const { isLoaded, loadError } = useLoadScript({
@@ -180,6 +181,7 @@ const WeatherDisplay = () => {
                 <WeatherInfoContainer>
                     <WeatherInfo
                         data={weatherData.current}
+                        daily={weatherData.daily}
                         displayUnit={displayUnit}
                         setDisplayUnit={setDisplayUnit}
                         city={weatherCity}
